@@ -15,35 +15,40 @@ def handle(msg):
     print('Chat:', content_type, chat_type, chat_id)
     m = telepot.namedtuple.Message(**msg)
 
-    aparaturl = m.text
-    res = requests.get(aparaturl)
-    soup = BeautifulSoup(res.content, 'html.parser')
-    down = soup.find_all('li', class_='action download-link')
-    title = soup.find('li', class_='action download-link')
-    title = re.findall(r'title\=\"(.+?)\"', str(title))
-    title = title[0]
+    
+    aparaturl = m.text.split()
+    for i in aparaturl:
+        if 'aparat.com' not in i:
+            pass
+        else:
+            res = requests.get(i)
+            soup = BeautifulSoup(res.content, 'html.parser')
+            down = soup.find_all('li', class_='action download-link')
+            title = soup.find('li', class_='action download-link')
+            title = re.findall(r'title\=\"(.+?)\"', str(title))
+            title = title[0]
 
-    dl = []
-    for i in down:
-        reg = re.findall(r'(https.+?)\"', str(i))
-        dl.append(reg[0])
-    for i in dl:
-        if '144p' in i:
-            Dl144 = i
-        elif '240p' in i:
-            Dl240 = i
-        elif '480p' in i:
-            Dl480 = i
-        elif '720p' in i:
-            Dl720 = i
-        elif '1080p' in i:
-            Dl1080 = i
+            dl = []
+            for i in down:
+                reg = re.findall(r'(https.+?)\"', str(i))
+                dl.append(reg[0])
+            for i in dl:
+                if '144p' in i:
+                    Dl144 = i
+                elif '240p' in i:
+                    Dl240 = i
+                elif '480p' in i:
+                    Dl480 = i
+                elif '720p' in i:
+                    Dl720 = i
+                elif '1080p' in i:
+                    Dl1080 = i
 
-    bot.sendMessage(chat_id,('''
-[%s 144p](%s)
-[%s 240p](%s)
-[%s 480p](%s)
-[%s 720p](%s)''' % (title, Dl144, title, Dl240, title, Dl480, title, Dl720)) , parse_mode='markdown')
+            bot.sendMessage(chat_id,('''
+        [%s | 144p](%s)
+        [%s | 240p](%s)
+        [%s | 480p](%s)
+        [%s | 720p](%s)''' % (title, Dl144, title, Dl240, title, Dl480, title, Dl720)) , parse_mode='markdown')
 
 
 def on_inline_query(msg):
@@ -123,4 +128,5 @@ print('I am listening ...')
 
 while 1:
     time.sleep(10)
+            
             
