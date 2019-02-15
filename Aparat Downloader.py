@@ -45,10 +45,10 @@ def handle(msg):
                     Dl1080 = i
 
             bot.sendMessage(chat_id,('''
-        [%s | 144p](%s)
-        [%s | 240p](%s)
-        [%s | 480p](%s)
-        [%s | 720p](%s)''' % (title, Dl144, title, Dl240, title, Dl480, title, Dl720)) , parse_mode='markdown')
+[%s | 144p](%s)
+[%s | 240p](%s)
+[%s | 480p](%s)
+[%s | 720p](%s)''' % (title, Dl144, title, Dl240, title, Dl480, title, Dl720)) , parse_mode='markdown')
 
 
 def on_inline_query(msg):
