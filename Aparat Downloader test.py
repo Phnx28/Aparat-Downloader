@@ -10,12 +10,11 @@ import re
 token = "754136717:AAGCusr6Bf_q08mp3BQ8KWlun8zuZptUtmY"
 bot = telepot.Bot(token)
 
-def handle(msg):
+def handle(msg): #تابع گرفتن لینک ویدیو
     content_type, chat_type, chat_id = telepot.glance(msg)
     print('Chat:', content_type, chat_type, chat_id)
     m = telepot.namedtuple.Message(**msg)
 
-    
     aparaturl = m.text.split()
     for i in aparaturl:
         if 'aparat.com' not in i:
@@ -29,47 +28,68 @@ def handle(msg):
             title = title[0]
 
             dl = []
-            #availableq = []
-            #qu = ['144p', '240p', '480p', '720p', '1080p']
+            availableq = [] #لینک دانلود کیفیت های مختلف
+            qu = [] #کیفیت های مختلف
 
             for i in down:
                 reg = re.findall(r'(https.+?)\"', str(i))
                 dl.append(reg[0])
             for i in dl:
                 if '144p' in i:
-                    Dl144 = i
-                    #availableq.append(Dl144)
+                    Dl144p = i
+                    availableq.append(Dl144p)
+                    qu.append('144p')
                 elif '240p' in i:
-                    Dl240 = i
-                    #availableq.append(Dl240)
+                    Dl240p = i
+                    availableq.append(Dl240p)
+                    qu.append('240p')
                 elif '480p' in i:
-                    Dl480 = i
-                    #availableq.append(Dl480)
+                    Dl480p = i
+                    availableq.append(Dl480p)
+                    qu.append('480p')
                 elif '720p' in i:
-                    Dl720 = i
-                    #availableq.append(Dl720)
+                    Dl720p = i
+                    availableq.append(Dl720p)
+                    qu.append('720p')
                 elif '1080p' in i:
-                    Dl1080 = i
-                    #availableq.append(Dl1080)
+                    Dl1080p = i
+                    availableq.append(Dl1080p)
+                    qu.append('1080p')
 
-
-            keyboard = InlineKeyboardMarkup(inline_keyboard=[
-                for i in range(availableq):
-                   [InlineKeyboardButton(text='144p', url=Dl144, callback_data='1')],
-                   [InlineKeyboardButton(text='240p', url=Dl240, callback_data='2')],
-                   [InlineKeyboardButton(text='480p', url=Dl480, callback_data='3')],
-                   [InlineKeyboardButton(text='720p', url=Dl720, callback_data='4')],
-                   [InlineKeyboardButton(text='1080p', url=Dl1080, callback_data='5')]
-               ])
-
+            if len(availableq) == 1:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=('%s'%(qu[0])) , url=availableq[0], callback_data='1')]
+                ])
+            elif len(availableq) == 2:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=('%s'%(qu[0])) , url=availableq[0], callback_data='1')],
+                    [InlineKeyboardButton(text=('%s'%(qu[1])) , url=availableq[1], callback_data='2')]
+                ])
+            elif len(availableq) == 3:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=('%s'%(qu[0])) , url=availableq[0], callback_data='1')],
+                    [InlineKeyboardButton(text=('%s'%(qu[1])) , url=availableq[1], callback_data='2')],
+                    [InlineKeyboardButton(text=('%s'%(qu[2])) , url=availableq[2], callback_data='3')]
+                ])
+            elif len(availableq) == 4:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=('%s'%(qu[0])) , url=availableq[0], callback_data='1')],
+                    [InlineKeyboardButton(text=('%s'%(qu[1])) , url=availableq[1], callback_data='2')],
+                    [InlineKeyboardButton(text=('%s'%(qu[2])) , url=availableq[2], callback_data='3')],
+                    [InlineKeyboardButton(text=('%s'%(qu[3])) , url=availableq[3], callback_data='4')]
+                ])
+            elif len(availableq) == 5:
+                keyboard = InlineKeyboardMarkup(inline_keyboard=[
+                    [InlineKeyboardButton(text=('%s'%(qu[0])) , url=availableq[0], callback_data='1')],
+                    [InlineKeyboardButton(text=('%s'%(qu[1])) , url=availableq[1], callback_data='2')],
+                    [InlineKeyboardButton(text=('%s'%(qu[2])) , url=availableq[2], callback_data='3')],
+                    [InlineKeyboardButton(text=('%s'%(qu[3])) , url=availableq[3], callback_data='4')],
+                    [InlineKeyboardButton(text=('%s'%(qu[4])) , url=availableq[4], callback_data='5')]
+                ])
+            
             bot.sendMessage(chat_id, ('%s' % title), reply_markup=keyboard)
 
 
-            #bot.sendMessage(chat_id,('''
-#[%s | 144p](%s)
-#[%s | 240p](%s)
-#[%s | 480p](%s)
-#[%s | 720p](%s)''' % (title, Dl144, title, Dl240, title, Dl480, title, Dl720)) , parse_mode='markdown')
 
 def on_callback_query(msg):
     query_id, from_id, query_data = telepot.glance(msg, flavor='callback_query')
@@ -78,7 +98,7 @@ def on_callback_query(msg):
     bot.answerCallbackQuery(query_id, text='Got it')
 
 
-def on_inline_query(msg):
+def on_inline_query(msg): #تابع سرج در آپارات
     query_id, from_id, query_string = telepot.glance(msg, flavor='inline_query')
     print ('Inline Query:', query_id, from_id, query_string)
 
@@ -156,5 +176,3 @@ print('I am listening ...')
 
 while 1:
     time.sleep(10)
-            
-            
