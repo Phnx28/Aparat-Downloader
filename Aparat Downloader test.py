@@ -104,6 +104,7 @@ def on_inline_query(msg): #تابع سرج در آپارات
 
     query_string = query_string.strip('')
     
+
     if '-s' not in query_string:
         pass
     else:
@@ -138,88 +139,98 @@ def on_inline_query(msg): #تابع سرج در آپارات
             thumnail_links = thumnail_links[0]
             thumbnailslinks.append(thumnail_links)
 
-        articles = [InlineQueryResultArticle(
-                        id='1',
-                        title=videostitles[0],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[0]
-                        ),
-                        thumb_url=thumbnailslinks[0]    
-                ),
-                InlineQueryResultArticle(
-                        id='2',
-                        title=videostitles[1],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[1]
-                        ),
-                        thumb_url=thumbnailslinks[1]    
-                ),
-                InlineQueryResultArticle(
-                        id='3',
-                        title=videostitles[2],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[2]
-                        ),
-                        thumb_url=thumbnailslinks[2]    
-                ),
-                InlineQueryResultArticle(
-                        id='4',
-                        title=videostitles[3],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[3]
-                        ),
-                        thumb_url=thumbnailslinks[3]    
-                ),
-                InlineQueryResultArticle(
-                        id='5',
-                        title=videostitles[4],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[4]
-                        ),
-                        thumb_url=thumbnailslinks[4]    
-                ),
-                InlineQueryResultArticle(
-                        id='6',
-                        title=videostitles[5],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[5]
-                        ),
-                        thumb_url=thumbnailslinks[5]    
-                ),
-                InlineQueryResultArticle(
-                        id='7',
-                        title=videostitles[6],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[6]
-                        ),
-                        thumb_url=thumbnailslinks[6]    
-                ),
-                InlineQueryResultArticle(
-                        id='8',
-                        title=videostitles[7],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[7]
-                        ),
-                        thumb_url=thumbnailslinks[7]    
-                ),
-                InlineQueryResultArticle(
-                        id='9',
-                        title=videostitles[8],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[8]
-                        ),
-                        thumb_url=thumbnailslinks[8]    
-                ),
-                InlineQueryResultArticle(
-                        id='10',
-                        title=videostitles[9],
-                        input_message_content=InputTextMessageContent(
-                            message_text=videoslinks[9]
-                        ),
-                        thumb_url=thumbnailslinks[9]
-                )]
+        #add thumbnail to search results
+    thumbnails_soup = soupp.find_all('div', class_="video-item__thumb-wrapper", limit=10)
+    thumbnailslinks = []
+    for i in thumbnails_soup:
+        find_thumbnails_links = i.find('a', class_="video-item__thumb")
+        thumnail_links = re.findall(r'url\((.+?)\)', str(find_thumbnails_links))
+        thumnail_links = thumnail_links[0]
+        thumbnailslinks.append(thumnail_links)
 
-        bot.answerInlineQuery(query_id, articles)
+    articles = [InlineQueryResultArticle(
+                    id='1',
+                    title=videostitles[0],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[0]
+                    ),
+                    thumb_url=thumbnailslinks[0]    
+            ),
+            InlineQueryResultArticle(
+                    id='2',
+                    title=videostitles[1],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[1]
+                    ),
+                    thumb_url=thumbnailslinks[1]    
+            ),
+            InlineQueryResultArticle(
+                    id='3',
+                    title=videostitles[2],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[2]
+                    ),
+                    thumb_url=thumbnailslinks[2]    
+            ),
+            InlineQueryResultArticle(
+                    id='4',
+                    title=videostitles[3],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[3]
+                    ),
+                    thumb_url=thumbnailslinks[3]    
+            ),
+            InlineQueryResultArticle(
+                    id='5',
+                    title=videostitles[4],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[4]
+                    ),
+                    thumb_url=thumbnailslinks[4]    
+            ),
+            InlineQueryResultArticle(
+                    id='6',
+                    title=videostitles[5],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[5]
+                    ),
+                    thumb_url=thumbnailslinks[5]    
+            ),
+            InlineQueryResultArticle(
+                    id='7',
+                    title=videostitles[6],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[6]
+                    ),
+                    thumb_url=thumbnailslinks[6]    
+            ),
+            InlineQueryResultArticle(
+                    id='8',
+                    title=videostitles[7],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[7]
+                    ),
+                    thumb_url=thumbnailslinks[7]    
+            ),
+            InlineQueryResultArticle(
+                    id='9',
+                    title=videostitles[8],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[8]
+                    ),
+                    thumb_url=thumbnailslinks[8]    
+            ),
+            InlineQueryResultArticle(
+                    id='10',
+                    title=videostitles[9],
+                    input_message_content=InputTextMessageContent(
+                        message_text=videoslinks[9]
+                    ),
+                    thumb_url=thumbnailslinks[9]
+            )]
+
+    bot.answerInlineQuery(query_id, articles)
+
 
 def on_chosen_inline_result(msg):
     result_id, from_id, query_string = telepot.glance(msg, flavor='chosen_inline_result')
