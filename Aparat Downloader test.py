@@ -117,10 +117,10 @@ def on_inline_query(msg): #تابع سرج در آپارات
             searchurl = ('https://www.aparat.com/search/%s' % (query_string))
         ress = requests.get(searchurl)
         soupp = BeautifulSoup(ress.content, 'html.parser')
-        videos = soupp.find_all('div', class_="vide-item__info", limit=5)
+        videos_soup = soupp.find_all('div', class_="vide-item__info", limit=10)
         videoslinks = []
         videostitles = []
-        for i in videos:
+        for i in videos_soup:
             findlinks = i.find('h2', class_="video-item__title")
             videos_links = re.findall(r'(https.+?)\"', str(findlinks))
             videos_links = videos_links[0]
@@ -128,43 +128,95 @@ def on_inline_query(msg): #تابع سرج در آپارات
             videos_titles = re.findall(r'title\=\"(.+?)\"', str(findlinks))
             videos_titles = videos_titles[0]
             videostitles.append(videos_titles)
-
         
+        #add thumbnail to search results
+        thumbnails_soup = soupp.find_all('div', class_="video-item__thumb-wrapper", limit=10)
+        thumbnailslinks = []
+        for i in thumbnails_soup:
+            find_thumbnails_links = i.find('a', class_="video-item__thumb")
+            thumnail_links = re.findall(r'url\((.+?)\)', str(find_thumbnails_links))
+            thumnail_links = thumnail_links[0]
+            thumbnailslinks.append(thumnail_links)
 
         articles = [InlineQueryResultArticle(
                         id='1',
                         title=videostitles[0],
                         input_message_content=InputTextMessageContent(
                             message_text=videoslinks[0]
-                        )    
+                        ),
+                        thumb_url=thumbnailslinks[0]    
                 ),
                 InlineQueryResultArticle(
                         id='2',
                         title=videostitles[1],
                         input_message_content=InputTextMessageContent(
                             message_text=videoslinks[1]
-                        )    
+                        ),
+                        thumb_url=thumbnailslinks[1]    
                 ),
                 InlineQueryResultArticle(
                         id='3',
                         title=videostitles[2],
                         input_message_content=InputTextMessageContent(
                             message_text=videoslinks[2]
-                        )    
+                        ),
+                        thumb_url=thumbnailslinks[2]    
                 ),
                 InlineQueryResultArticle(
                         id='4',
                         title=videostitles[3],
                         input_message_content=InputTextMessageContent(
                             message_text=videoslinks[3]
-                        )    
+                        ),
+                        thumb_url=thumbnailslinks[3]    
                 ),
                 InlineQueryResultArticle(
                         id='5',
                         title=videostitles[4],
                         input_message_content=InputTextMessageContent(
                             message_text=videoslinks[4]
-                        )    
+                        ),
+                        thumb_url=thumbnailslinks[4]    
+                ),
+                InlineQueryResultArticle(
+                        id='6',
+                        title=videostitles[5],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[5]
+                        ),
+                        thumb_url=thumbnailslinks[5]    
+                ),
+                InlineQueryResultArticle(
+                        id='7',
+                        title=videostitles[6],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[6]
+                        ),
+                        thumb_url=thumbnailslinks[6]    
+                ),
+                InlineQueryResultArticle(
+                        id='8',
+                        title=videostitles[7],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[7]
+                        ),
+                        thumb_url=thumbnailslinks[7]    
+                ),
+                InlineQueryResultArticle(
+                        id='9',
+                        title=videostitles[8],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[8]
+                        ),
+                        thumb_url=thumbnailslinks[8]    
+                ),
+                InlineQueryResultArticle(
+                        id='10',
+                        title=videostitles[9],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[9]
+                        ),
+                        thumb_url=thumbnailslinks[9]
                 )]
 
         bot.answerInlineQuery(query_id, articles)
