@@ -103,28 +103,43 @@ def on_inline_query(msg): #تابع سرج در آپارات
     print ('Inline Query:', query_id, from_id, query_string)
 
     query_string = query_string.strip('')
-    if ' ' in query_string:
-        searchbar = query_string.replace(" ", "_")
-        searchurl = ('https://www.aparat.com/search/%s' % (searchbar))
-    else:
-        searchurl = ('https://www.aparat.com/search/%s' % (query_string))
-    ress = requests.get(searchurl)
-    soupp = BeautifulSoup(ress.content, 'html.parser')
-    videos = soupp.find_all('div', class_="vide-item__info", limit=5)
-    videoslinks = []
-    videostitles = []
-    for i in videos:
-        findlinks = i.find('h2', class_="video-item__title")
-        videos_links = re.findall(r'(https.+?)\"', str(findlinks))
-        videos_links = videos_links[0]
-        videoslinks.append(videos_links)
-        videos_titles = re.findall(r'title\=\"(.+?)\"', str(findlinks))
-        videos_titles = videos_titles[0]
-        videostitles.append(videos_titles)
-
     
 
-    #add thumbnail to search results
+    if '-s' not in query_string:
+        pass
+    else:
+        joda_search = query_string.split('-')
+        query_string = joda_search[0].strip()
+        
+        if ' ' in query_string:
+            searchbar = query_string.replace(" ", "_")
+            searchurl = ('https://www.aparat.com/search/%s' % (searchbar))
+        else:
+            searchurl = ('https://www.aparat.com/search/%s' % (query_string))
+        ress = requests.get(searchurl)
+        soupp = BeautifulSoup(ress.content, 'html.parser')
+        videos_soup = soupp.find_all('div', class_="vide-item__info", limit=10)
+        videoslinks = []
+        videostitles = []
+        for i in videos_soup:
+            findlinks = i.find('h2', class_="video-item__title")
+            videos_links = re.findall(r'(https.+?)\"', str(findlinks))
+            videos_links = videos_links[0]
+            videoslinks.append(videos_links)
+            videos_titles = re.findall(r'title\=\"(.+?)\"', str(findlinks))
+            videos_titles = videos_titles[0]
+            videostitles.append(videos_titles)
+        
+        #add thumbnail to search results
+        thumbnails_soup = soupp.find_all('div', class_="video-item__thumb-wrapper", limit=10)
+        thumbnailslinks = []
+        for i in thumbnails_soup:
+            find_thumbnails_links = i.find('a', class_="video-item__thumb")
+            thumnail_links = re.findall(r'url\((.+?)\)', str(find_thumbnails_links))
+            thumnail_links = thumnail_links[0]
+            thumbnailslinks.append(thumnail_links)
+
+        #add thumbnail to search results
     thumbnails_soup = soupp.find_all('div', class_="video-item__thumb-wrapper", limit=10)
     thumbnailslinks = []
     for i in thumbnails_soup:
@@ -215,6 +230,7 @@ def on_inline_query(msg): #تابع سرج در آپارات
             )]
 
     bot.answerInlineQuery(query_id, articles)
+
 
 def on_chosen_inline_result(msg):
     result_id, from_id, query_string = telepot.glance(msg, flavor='chosen_inline_result')
