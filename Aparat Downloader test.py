@@ -103,64 +103,71 @@ def on_inline_query(msg): #تابع سرج در آپارات
     print ('Inline Query:', query_id, from_id, query_string)
 
     query_string = query_string.strip('')
-    if ' ' in query_string:
-        searchbar = query_string.replace(" ", "_")
-        searchurl = ('https://www.aparat.com/search/%s' % (searchbar))
-    else:
-        searchurl = ('https://www.aparat.com/search/%s' % (query_string))
-    ress = requests.get(searchurl)
-    soupp = BeautifulSoup(ress.content, 'html.parser')
-    videos = soupp.find_all('div', class_="vide-item__info", limit=5)
-    videoslinks = []
-    videostitles = []
-    for i in videos:
-        findlinks = i.find('h2', class_="video-item__title")
-        videos_links = re.findall(r'(https.+?)\"', str(findlinks))
-        videos_links = videos_links[0]
-        videoslinks.append(videos_links)
-        videos_titles = re.findall(r'title\=\"(.+?)\"', str(findlinks))
-        videos_titles = videos_titles[0]
-        videostitles.append(videos_titles)
-
     
+    if '-s' not in query_string:
+        pass
+    else:
+        joda_search = query_string.split('-')
+        query_string = joda_search[0].strip()
+        
+        if ' ' in query_string:
+            searchbar = query_string.replace(" ", "_")
+            searchurl = ('https://www.aparat.com/search/%s' % (searchbar))
+        else:
+            searchurl = ('https://www.aparat.com/search/%s' % (query_string))
+        ress = requests.get(searchurl)
+        soupp = BeautifulSoup(ress.content, 'html.parser')
+        videos = soupp.find_all('div', class_="vide-item__info", limit=5)
+        videoslinks = []
+        videostitles = []
+        for i in videos:
+            findlinks = i.find('h2', class_="video-item__title")
+            videos_links = re.findall(r'(https.+?)\"', str(findlinks))
+            videos_links = videos_links[0]
+            videoslinks.append(videos_links)
+            videos_titles = re.findall(r'title\=\"(.+?)\"', str(findlinks))
+            videos_titles = videos_titles[0]
+            videostitles.append(videos_titles)
 
-    articles = [InlineQueryResultArticle(
-                    id='1',
-                    title=videostitles[0],
-                    input_message_content=InputTextMessageContent(
-                        message_text=videoslinks[0]
-                    )    
-               ),
-               InlineQueryResultArticle(
-                    id='2',
-                    title=videostitles[1],
-                    input_message_content=InputTextMessageContent(
-                        message_text=videoslinks[1]
-                    )    
-               ),
-               InlineQueryResultArticle(
-                    id='3',
-                    title=videostitles[2],
-                    input_message_content=InputTextMessageContent(
-                        message_text=videoslinks[2]
-                    )    
-               ),
-               InlineQueryResultArticle(
-                    id='4',
-                    title=videostitles[3],
-                    input_message_content=InputTextMessageContent(
-                        message_text=videoslinks[3]
-                    )    
-               ),
-               InlineQueryResultArticle(
-                    id='5',
-                    title=videostitles[4],
-                    input_message_content=InputTextMessageContent(
-                        message_text=videoslinks[4]
-                    )    
-               )]
+        
 
-    bot.answerInlineQuery(query_id, articles)
+        articles = [InlineQueryResultArticle(
+                        id='1',
+                        title=videostitles[0],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[0]
+                        )    
+                ),
+                InlineQueryResultArticle(
+                        id='2',
+                        title=videostitles[1],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[1]
+                        )    
+                ),
+                InlineQueryResultArticle(
+                        id='3',
+                        title=videostitles[2],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[2]
+                        )    
+                ),
+                InlineQueryResultArticle(
+                        id='4',
+                        title=videostitles[3],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[3]
+                        )    
+                ),
+                InlineQueryResultArticle(
+                        id='5',
+                        title=videostitles[4],
+                        input_message_content=InputTextMessageContent(
+                            message_text=videoslinks[4]
+                        )    
+                )]
+
+        bot.answerInlineQuery(query_id, articles)
 
 def on_chosen_inline_result(msg):
     result_id, from_id, query_string = telepot.glance(msg, flavor='chosen_inline_result')
