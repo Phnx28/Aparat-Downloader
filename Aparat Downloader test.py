@@ -7,7 +7,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 
-token = "754136717:AAGCusr6Bf_q08mp3BQ8KWlun8zuZptUtmY"
+token = ""
 bot = telepot.Bot(token)
 
 def handle(msg): #تابع گرفتن لینک ویدیو
